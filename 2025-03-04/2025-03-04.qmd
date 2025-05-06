@@ -23,22 +23,22 @@ colnames(longbeach)
  
 Which type of pets are adopted most often?
 ```{r}
-# Count adoptions by animal type
-adoptions_by_type <- longbeach %>%
+adoptions_by_sex <- longbeach %>%
   filter(outcome_type == "adoption") %>%
-  group_by(animal_type) %>%
-  summarise(total_adopted = n()) %>%
-  arrange(desc(total_adopted))
+  group_by(animal_type, sex) %>%
+  summarise(adoptions = n(), .groups = "drop")
 
-# Plot 
-ggplot(adoptions_by_type, aes(x = reorder(animal_type, -total_adopted), y = total_adopted)) +
-  geom_bar(stat = "identity", fill = "coral") +
+ggplot(adoptions_by_sex, aes(x = animal_type, y = adoptions, fill = sex)) +
+  geom_bar(stat = "identity", position = "dodge") +
   labs(
-    title = "Adoptions by Animal Type",
+    title = "Adoptions by Animal Type and Sex",
     x = "Animal Type",
-    y = "Number of Adoptions"
+    y = "Number of Adoptions",
+    fill = "Sex",
+    caption = "Data: TidyTuesday 2025-03-04"
   ) +
   theme_classic()
 
+
 ```
- 
+- This grouped bar plot shows that dogs and cats are the most frequently adopted animals, with dogs slightly leading. In addition, within each species, the distribution of adoptions by sex appears relatively balanced, except that there may be a slight preference for females among cats.
