@@ -1,0 +1,29 @@
+```{r}
+library("tidyverse")
+```
+```{r}
+exped_tidy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-01-21/exped_tidy.csv')
+peaks_tidy <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-01-21/peaks_tidy.csv')
+```
+
+
+```{r}
+head(exped_tidy)
+head(peaks_tidy)
+view(exped_tidy)
+```
+```{r}
+exped_tidy2 <- exped_tidy %>%
+  select(LEADERS, NATION, SUCCESS1, HIGHPOINT) 
+
+exped_tidy2
+```
+
+
+```{r}
+ggplot(exped_tidy2, aes(x = NATION, y = HIGHPOINT)) +
+  geom_boxplot(fill = "orange") +
+  labs(title = "Highpoints Reached by Nation", x = "Nation", y = "Highpoint (m)") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) 
+```
+

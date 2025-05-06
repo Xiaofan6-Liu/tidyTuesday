@@ -1,0 +1,44 @@
+---
+title: "Tidy Tuesday (2025-03-04)"
+author: "Scarlett"
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+```
+
+
+# data 
+```{r}
+
+longbeach <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-03-04/longbeach.csv')
+
+head(longbeach)
+
+colnames(longbeach)
+
+```
+
+ 
+Which type of pets are adopted most often?
+```{r}
+# Count adoptions by animal type
+adoptions_by_type <- longbeach %>%
+  filter(outcome_type == "adoption") %>%
+  group_by(animal_type) %>%
+  summarise(total_adopted = n()) %>%
+  arrange(desc(total_adopted))
+
+# Plot 
+ggplot(adoptions_by_type, aes(x = reorder(animal_type, -total_adopted), y = total_adopted)) +
+  geom_bar(stat = "identity", fill = "coral") +
+  labs(
+    title = "Adoptions by Animal Type",
+    x = "Animal Type",
+    y = "Number of Adoptions"
+  ) +
+  theme_classic()
+
+```
+ 
