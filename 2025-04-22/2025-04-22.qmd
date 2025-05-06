@@ -1,0 +1,68 @@
+---
+title: "Tidy Tuesday (2025-03-04)"
+author: "Scarlett"
+---
+```{r}
+library(tidyverse)
+```
+
+#data
+```{r}
+daily_accidents <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-22/daily_accidents.csv')
+daily_accidents_420 <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-22/daily_accidents_420.csv')
+
+head(daily_accidents)
+head(daily_accidents_420)
+
+```
+- Is there any correlations between fatal car crashes and particular days of the year?
+```{r, fig.height=5.5, fig.width = 9}
+library(tidyverse)
+library(lubridate)
+
+
+
+daily_accidents <- daily_accidents %>%
+  mutate(month_day = format(date, "%m-%d"))
+
+
+
+avg_by_day <- daily_accidents %>%
+  group_by(month_day) %>%
+  summarise(avg_fatalities = mean(fatalities_count, na.rm = TRUE))
+
+label_df <- tibble(
+  month_day = c("01-01", "05-29", "07-04", "09-04", "11-23"),
+  label = c("New Year", "Memorial Day", "July 4th", "Labor Day", "Thanksgiving")
+)
+
+label_df <- label_df %>%
+  left_join(avg_by_day, by = "month_day")
+
+
+
+# Plot
+ggplot(avg_by_day, aes(x = month_day, y = avg_fatalities, group = 1)) +
+  geom_line(color = "red") +
+  geom_point(data = label_df, aes(x = month_day, y = avg_fatalities), color = "black", size = 2) +
+  geom_text(data = label_df,
+            aes(x = month_day, y = avg_fatalities, label = label),
+            hjust = -0.2,
+            vjust = -1,
+            size = 3.5,
+            color = "black") +
+  labs(
+    title = "Average Fatal Car Crashes by Day of the Year",
+    subtitle = "Key U.S. holidays labeled",
+    x = "Day of Year",
+    y = "Average Fatalities"
+  ) +
+  theme_classic() +
+  theme(axis.text.x = element_blank())
+
+
+```
+
+- The plot shows significant spikes in average fatal crashes around U.S. holidays. Notably, July 4th and Labor Day show elevated fatality rates
+
+
